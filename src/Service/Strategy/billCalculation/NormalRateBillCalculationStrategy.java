@@ -14,7 +14,7 @@ public class NormalRateBillCalculationStrategy implements BillCalculationStrateg
         bill.setBillStatus(BillStatus.PENDING);
         bill.setTicket(ticket);
         bill.setExitTime(localDateTime);
-        double amount = ChronoUnit.SECONDS.between(bill.getExitTime(), ticket.getEntryDateTime()) * 10;
+        double amount = ChronoUnit.SECONDS.between(ticket.getEntryDateTime(), bill.getExitTime()) * 10;
         bill.setAmount(amount);
         return bill;
     }

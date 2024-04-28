@@ -25,6 +25,14 @@ public class Bill {
         currentBillID++;
     }
 
+    @Override
+    public String toString() {
+        return "Bill ID: " + billID + "\n"
+                + "Bill Amount: " + amount + "\n"
+                + "Exit Time: " + exitTime + "\n"
+                + "Bill Status: " + billStatus;
+    }
+
     public int getBillID() {
         return billID;
     }

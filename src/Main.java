@@ -1,8 +1,9 @@
+import Controller.BillController;
+import Controller.PaymentController;
 import Controller.TicketController;
-import Models.ParkingGate;
-import Models.ParkingLot;
-import Models.ParkingTicket;
-import Models.VehicleSpotType;
+import Exceptions.PaymentFailedException;
+import Models.*;
+import Service.Strategy.billCalculation.BillCalculationType;
 import Service.Strategy.spotAllocation.SpotAllocationStrategyTypes;
 
 import java.time.LocalDateTime;
@@ -23,15 +24,18 @@ public class Main {
             System.out.println("Please enter your Choice");
             System.out.println("1. Enter Parking Lot");
             System.out.println("2. Exit Parking Lot");
-            System.out.println("3. Make Floor Unavailable");
+            //System.out.println("3. Make Floor Unavailable");
             int choice = sc.nextInt();
             switch (choice) {
                 case 1:
                     getVehicleDetailsAndAllotSpotToCar(in);
+                    break;
                 case 2:
                     getParkingTicketIDAndExitTheCar(in);
+                    break;
                 default:
                     System.out.println("Not a correct Choice, try Again");
+                    break;
             }
         }
     }
@@ -40,7 +44,27 @@ public class Main {
     private static void getParkingTicketIDAndExitTheCar(Init in) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Please enter your Ticket ID");
-
+        int ticketID = sc.nextInt();
+        LocalDateTime exitTime = LocalDateTime.now();
+        BillController billController = new BillController();
+        Bill bill = billController.generateBill(ticketID, BillCalculationType.NORMAL, exitTime);
+        System.out.println(bill.toString());
+        System.out.println("Do you want to pay the bill?(y/n)");
+        sc.nextLine();
+        String ans = sc.nextLine();
+        if(ans.equalsIgnoreCase("y"))
+        {
+            PaymentController paymentController = new PaymentController();
+            if(paymentController.payBill(bill))
+            {
+                System.out.println("Payment Successful");
+            }
+            else {
+                throw new PaymentFailedException("Your payment has failed.");
+            }
+        }
+        else
+            throw new PaymentFailedException("You cannot deny due payment.");
     }
 
     private static void getVehicleDetailsAndAllotSpotToCar(Init in) {

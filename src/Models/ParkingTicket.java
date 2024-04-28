@@ -9,7 +9,7 @@ public class ParkingTicket {
     private LocalDateTime entryDateTime;
     private ParkingGate entryGate;
 
-    private static int currentParkingID;
+    private static int currentParkingID = 1;
 
     public ParkingTicket(ParkingSpot parkingSpot, Vehicle vehicle, LocalDateTime entryDateTime, ParkingGate entryGate) {
         this.parkingTicketID = currentParkingID;
